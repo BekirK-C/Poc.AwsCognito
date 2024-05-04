@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoC.AwsCognito", "src\PoC.AwsCognito\PoC.AwsCognito.csproj", "{D85A9AC3-EC61-4818-B9C7-2035F88BF4B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D85A9AC3-EC61-4818-B9C7-2035F88BF4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D85A9AC3-EC61-4818-B9C7-2035F88BF4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D85A9AC3-EC61-4818-B9C7-2035F88BF4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D85A9AC3-EC61-4818-B9C7-2035F88BF4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
