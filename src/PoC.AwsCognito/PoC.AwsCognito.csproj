@@ -8,8 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="3.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Requests\Commands\" />
+      <Folder Include="Requests\Queries\" />
     </ItemGroup>
 
 </Project>
