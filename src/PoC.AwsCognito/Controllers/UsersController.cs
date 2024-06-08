@@ -2,26 +2,31 @@ using Amazon;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using PoC.AwsCognito.Models;
 
 namespace PoC.AwsCognito.Controllers;
 
+[Route("api/users")]
 public class UsersController : ControllerBase
 {
-    private const string ClientId = "6c4s2rv24lkk8b8iai753bq0c4";
-    private const string UserPoolId = "us-east-1_ZV8S0Kdr1";
-    private const string AccessKey  = "AKIA4MTWM4VVKWMIUVVY";
-    private const string SecretKey  = "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";
+    private readonly AwsCognitoSettings _awsCognitoSettings;
     private readonly RegionEndpoint _region = RegionEndpoint.USEast1;
 
+    public UsersController(IOptions<AwsCognitoSettings> awsCognitoSettings)
+    {
+        _awsCognitoSettings = awsCognitoSettings.Value;
+    }
+
     [HttpPost]
-    [Route("api/register")]
+    [Route("register")]
     public async Task<ActionResult<string>> Register(RegisterModel user)
     {
         var cognito = new AmazonCognitoIdentityProviderClient(_region);
 
         var request = new SignUpRequest
         {
-            ClientId = ClientId,
+            ClientId = _awsCognitoSettings.ClientId,
             Password = user.Password,
             Username = user.UserName
         };
@@ -33,21 +38,31 @@ public class UsersController : ControllerBase
         };
         request.UserAttributes.Add(emailAttribute);
 
-        var response = await cognito.SignUpAsync(request);
+        await cognito.SignUpAsync(request);
+
+        var req = new AdminConfirmSignUpRequest
+        {
+            Username = user.UserName,
+            UserPoolId = _awsCognitoSettings.UserPoolId
+        };
+
+        await cognito.AdminConfirmSignUpAsync(req);
 
         return Ok();
     }
 
     [HttpPost]
-    [Route("api/signin")]
+    [Route("signin")]
     public async Task<ActionResult<string>> SignIn(RegisterModel user)
     {
-        var cognito = new AmazonCognitoIdentityProviderClient(AccessKey, SecretKey, _region);
+        var cognito =
+            new AmazonCognitoIdentityProviderClient(_awsCognitoSettings.AccessKey, _awsCognitoSettings.SecretKey,
+                _region);
 
         var request = new AdminInitiateAuthRequest
         {
-            UserPoolId = UserPoolId,
-            ClientId = ClientId,
+            UserPoolId = _awsCognitoSettings.UserPoolId,
+            ClientId = _awsCognitoSettings.ClientId,
             AuthFlow = AuthFlowType.ADMIN_USER_PASSWORD_AUTH
         };
 
@@ -58,12 +73,4 @@ public class UsersController : ControllerBase
 
         return Ok(response.AuthenticationResult.IdToken);
     }
-}
-
-
-public class RegisterModel
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
-    public string Email { get; set; }
 }

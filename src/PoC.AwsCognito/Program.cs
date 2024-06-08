@@ -1,10 +1,7 @@
-using Amazon.AspNetCore.Identity.Cognito;
-using Amazon.CognitoIdentityProvider;
-using Amazon.Extensions.CognitoAuthentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PoC.AwsCognito.Models;
 using PoC.AwsCognito.Services;
 
 namespace PoC.AwsCognito;
@@ -26,10 +23,8 @@ public static class Program
     {
         builder.Services.AddControllers();
         builder.Services.AddScoped<CognitoIdentityService>();
-        // builder.Services.AddSingleton<CognitoUserPool>();
-        // builder.Services.AddScoped<CognitoUserManager<CognitoUser>>();
-        // builder.Services.AddScoped<SignInManager<CognitoUser>>();
 
+        builder.Services.Configure<AwsCognitoSettings>(builder.Configuration.GetSection("AWS"));
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -42,7 +37,7 @@ public static class Program
         }).AddJwtBearer(options =>
         {
             options.Authority = builder.Configuration["AwsCognito:Authority"];
-            options.Audience = "6c4s2rv24lkk8b8iai753bq0c4";
+            options.Audience = builder.Configuration["AWS:ClientId"];
             options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {

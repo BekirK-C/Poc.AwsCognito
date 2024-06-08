@@ -10,7 +10,8 @@ public class CognitoIdentityService
     private readonly CognitoUserManager<CognitoUser> _userManager;
     private readonly CognitoUserPool _pool;
 
-    public CognitoIdentityService(SignInManager<CognitoUser> signInManager, UserManager<CognitoUser> userManager, CognitoUserPool pool)
+    public CognitoIdentityService(SignInManager<CognitoUser> signInManager, UserManager<CognitoUser> userManager,
+        CognitoUserPool pool)
     {
         _signInManager = signInManager;
         _userManager = userManager as CognitoUserManager<CognitoUser>;
@@ -21,7 +22,7 @@ public class CognitoIdentityService
     {
         var user = _pool.GetUser(userName);
         user.Attributes.Add(CognitoAttribute.Email.AttributeName, email);
-        
+
         var result = await _userManager.CreateAsync(user, password);
         if (result.Succeeded)
         {
